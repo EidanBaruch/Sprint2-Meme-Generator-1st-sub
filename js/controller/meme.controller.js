@@ -18,18 +18,18 @@ function renderMemes() {
     var memes = getMemes(gQueryOptions, 18)
     var strHtmls = memes.map(meme => `
         <article class="meme-preview">
-            <button title="Delete meme" class="btn-remove" onclick="onRemoveMeme('${meme.id}')">X</button>
             
             <h2>${meme.category}</h2>
-            <p>Up to <span>${meme.rating}</span> KMH</p>
+            <p>Rating: <span>${meme.rating}</span></p>
             
-            <button onclick="onReadMeme('${meme.id}')">Details</button>
-            <button onclick="onUpdateMeme('${meme.id}')">Update</button>
-
+            <button class="meme-btn" onclick="onReadMeme('${meme.id}')">Info</button>
+            <button class="meme-btn" onclick="onUpdateMeme('${meme.id}')">Update</button>
+            <button class="meme-btn" title="Delete meme" class="btn-remove" onclick="onRemoveMeme('${meme.id}')">Delete</button>
             <img title="Photo of ${meme.category}" 
                 src="${meme.url}.jpg" 
                 alt="Meme category: ${meme.category}"
-                onerror="this.src='${meme.url}'">
+                onerror="this.src='${meme.url}'" 
+                onclick="console.log('${meme.url}')">
         </article> 
     `)
     document.querySelector('.memes-container').innerHTML = strHtmls.join('')
@@ -45,6 +45,26 @@ function renderCategories() {
     const elLists = document.querySelectorAll('.categories-list')
     elLists.forEach(list => list.innerHTML += strHtml)
 }
+
+function renderMeme(imageUrl, text) {
+    const canvas = document.getElementById('memeCanvas')
+    const ctx = canvas.getContext('2d')
+
+    const image = new Image()
+    image.onload = function() {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = 'white'
+        ctx.font = 'bold 24px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText(text, canvas.width / 2, 30)
+    }
+    image.src = imageUrl
+}
+
+const imageUrl = 'path/to/meme.jpg'
+const text = 'Hello, World!'
+renderMeme(imageUrl, text)
+
 
 // CRUD
 
@@ -66,9 +86,9 @@ function onUpdateMeme(memeId) {
     const elModal = document.querySelector('.meme-edit-modal')
     
     const elHeading = elModal.querySelector('h2').innerText = 'Edit Meme'
-    const elImg = elModal.querySelector('img').src=`img/${gMemeToEdit.category}.png`
+    const elImg = elModal.querySelector('img').src=`img/${gMemeToEdit.url}.png`
     const elCategories = elModal.querySelector('select').value = gMemeToEdit.category
-    const elMaxSpeed = elModal.querySelector('input').value = gMemeToEdit.maxSpeed
+    const elRating = elModal.querySelector('input').value = gMemeToEdit.rating
     
     elModal.showModal()
 }
@@ -77,12 +97,11 @@ function onSaveMeme() {
     const elForm = document.querySelector('.meme-edit-modal form')
 
     const elCategory = elForm.querySelector('select')
-    const elMaxSpeed = elForm.querySelector('input')
+    const elRating = elForm.querySelector('input')
     
     const category = elCategory.value
-    const maxSpeed = elMaxSpeed.value
+    const rating = elRating.value
 
-    // TODO Save the meme
     if(gMemeToEdit) {
         var meme = updateMeme(gMemeToEdit.id, category, rating)
         gMemeToEdit = null
@@ -115,7 +134,7 @@ function onReadMeme(memeId) {
     elModal.querySelector('h3').innerText = meme.category
     elModal.querySelector('h4 span').innerText = meme.rating
     elModal.querySelector('p').innerText = meme.desc
-    elModal.querySelector('img').src = `img/${meme.category}.png`
+    elModal.querySelector('img').src = `${meme.url}.jpg`
 
     elModal.showModal()
 }
@@ -126,12 +145,12 @@ function onCloseModal() {
 
 // Filter, Sort & Pagination
 
-function onSetFilterBy() {
+function onSetFilterBy(userInput) {
     const elCategory = document.querySelector('.filter-by select')
-    const elMinSpeed = document.querySelector('.filter-by input')
+    const elRating = document.querySelector('.filter-by input')
 
     gQueryOptions.filterBy.txt = elCategory.value
-    gQueryOptions.filterBy.minSpeed = elMinSpeed.value
+    gQueryOptions.filterBy.rating = elRating.value
 
     setQueryParams()
     renderMemes()
@@ -150,15 +169,12 @@ function onSetSortBy() {
         gQueryOptions.sortBy = { rating: dir }
     }
 
-    // gQueryOptions.sortBy = { [sortBy]: dir }
     setQueryParams()
     renderMemes()
 }
 
 function onNextPage() {
     const memeCount = getMemeCount(gQueryOptions.filterBy)
-
-    // page = { idx: 3, size: 4 } (12)
     
     if(memeCount > (gQueryOptions.page.idx + 1) * gQueryOptions.page.size) {
         gQueryOptions.page.idx++
@@ -176,7 +192,7 @@ function readQueryParams() {
     
     gQueryOptions.filterBy = {
         txt: queryParams.get('category') || '',
-        minSpeed: +queryParams.get('minSpeed') || 0
+        rating: +queryParams.get('rating') || 0
     }
 
     if(queryParams.get('sortBy')) {
@@ -194,7 +210,7 @@ function readQueryParams() {
 
 function renderQueryParams() {
     document.querySelector('.filter-by select').value = gQueryOptions.filterBy.txt
-    document.querySelector('.filter-by input').value = gQueryOptions.filterBy.minSpeed
+    document.querySelector('.filter-by input').value = gQueryOptions.filterBy.rating
     
     const sortKeys = Object.keys(gQueryOptions.sortBy)
     const sortBy = sortKeys[0]
@@ -208,7 +224,7 @@ function setQueryParams() {
     const queryParams = new URLSearchParams()
 
     queryParams.set('category', gQueryOptions.filterBy.txt)
-    queryParams.set('minSpeed', gQueryOptions.filterBy.minSpeed)
+    queryParams.set('rating', gQueryOptions.filterBy.rating)
 
     const sortKeys = Object.keys(gQueryOptions.sortBy)
     if(sortKeys.length) {

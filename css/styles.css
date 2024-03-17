@@ -9,12 +9,37 @@ body {
 }
 
 #meme-canvas {
-    border: 2px solid #000;
+    border: 2px #000 solid;
     display: block;
     margin: 20px auto;
+}
+
+.meme-btn {
+    padding: 3px;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
 .actions {
 	display: flex;
 	justify-content: space-between;
+}
+
+.hero {
+    display: flex;
+	justify-content: space-between;
+    border: 2px #000 solid;
+    
+}
+
+.meme-preview {
+    display: grid;
+	justify-content: space-between;
+    grid-template-columns: repeat(1, 3fr);
+    gap: 10px;
+    border: 2px #000 solid;
+    background-color: #eee;
+}
+#memeCanvas {
+    display: none;
 }

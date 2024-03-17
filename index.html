@@ -10,6 +10,7 @@
 
 	<body onload="onInit()">
 		<h1>Ultimate Meme Generator</h1>
+        <canvas id="memeCanvas" width="450" height="450"></canvas>
 
 		<section class="meme-filter">
 			<fieldset>
@@ -25,9 +26,9 @@
                     </select>
                     
                     <label>
-                        <span>Min Speed:</span>
+                        <span>Rating:</span>
                         <input type="range" min="0" max="300" value="50" 
-                               onchange="this.title=this.value;onSetFilterBy({minSpeed: +this.value})"/>
+                               onchange="this.title=this.value;onSetFilterBy({rating: this.value})"/>
                     </label>
                 </div>
                 
@@ -51,12 +52,15 @@
                 <button title="Add Meme" onclick="onAddMeme()">Add Meme</button>
                 <button title="Next Page" onclick="onNextPage()">Next Page</button>
             </div>
-			<section class="memes-container"></section>
+
+            <hero class="hero">
+	            <section class="memes-container"></section>
+            </hero>
 		</section>
 
 		<dialog class="modal">
 			<h3></h3>
-			<h4>Maximal Speeding <span></span> </h4>
+			<h4>Rating<span></span> </h4>
             <img src="" alt="">
 			<p></p>
 			<button onclick="onCloseModal()">Close</button>
@@ -83,7 +87,7 @@
         </dialog>
         
         <div class="user-msg"></div>
-        
+
         <script src="js/services/util.service.js"></script>
         <script src="js/services/storage.service.js"></script>
         <script src="js/services/meme.service.js"></script>

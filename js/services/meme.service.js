@@ -10,27 +10,6 @@ var gCurrImg = 0
 
 _createMemes()
 
-// function getMemes(options = {}) {
-
-//     var memes = _filterMemes(options.filterBy)
-
-//     // { maxSpeed: -1 }
-
-//     if(options.sortBy.rating) {
-//         memes.sort((meme1, meme2) => (meme1.rating - meme2.rating) * options.sortBy.rating)
-//     } else if(options.sortBy.category) {
-//         memes.sort((meme1, meme2) => meme1.category.localeCompare(meme2.category) * options.sortBy.category)
-//     }
-
-//     // { idx: 1, size: 4 }
-
-//     if(options.page) {
-//         const startIdx = options.page.idx * options.page.size
-//         memes = memes.slice(startIdx, startIdx + options.page.size)
-//     }
-
-//     return memes
-// }
 
 function getMemeCount(filterBy) {
     return _filterMemes(filterBy).length
@@ -41,7 +20,7 @@ function _filterMemes(filterBy) {
     const rating = filterBy.rating
 
     const memes = gMemes.filter(meme => 
-        meme.category.toLowerCase().includes(txt) &&
+        meme.category.includes(txt) &&
         meme.rating >= rating)
 
     return memes
@@ -68,6 +47,10 @@ function addMeme(category, rating) {
 
 function getMemeById(memeId) {
     return gMemes.find(meme => memeId === meme.id)
+}
+
+function getMemeByURL(memeUrl) {
+    return gMemes.find(meme => memeUrl === meme.url)
 }
 
 function updateMeme(memeId, newCategory, newRating) {
@@ -141,27 +124,8 @@ function getMemes(options = {}, numImages) {
         memes.push(meme)
     }
 
+    gMemes = memes
+
     return memes
     
 }
-
-// function getMemes(options = {}) {
-
-//     var memes = _filterMemes(options.filterBy)
-//         // { maxSpeed: -1 }
-    
-//         if(options.sortBy.rating) {
-//             memes.sort((meme1, meme2) => (meme1.rating - meme2.rating) * options.sortBy.rating)
-//         } else if(options.sortBy.category) {
-//             memes.sort((meme1, meme2) => meme1.category.localeCompare(meme2.category) * options.sortBy.category)
-//         }
-    
-//         // { idx: 1, size: 4 }
-    
-//         if(options.page) {
-//             const startIdx = options.page.idx * options.page.size
-//             memes = memes.slice(startIdx, startIdx + options.page.size)
-//         }
-    
-//         return memes
-// }
