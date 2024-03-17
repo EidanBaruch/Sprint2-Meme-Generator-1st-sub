@@ -3,8 +3,24 @@
 const gQueryOptions = {
     filterBy: { txt: '', rating: 60 },
     sortBy: {},
-    page: { idx: 0, size: 9 }
+    page: { idx: 0, size: 2 }
 }
+
+// var gImgs = [{id: 1, url: 'img/1.jpg', keywords: ['funny', 'cat']}] 
+var gMeme = {
+        selectedImgId: 1, 
+        selectedLineIdx: 0, 
+        lines: [ 
+            { 
+                txt: 'I sometimes eat Falafel', 
+                size: 20, 
+                color: 'red' 
+        }
+    ] 
+}
+
+var gKeywordSearchCountMap = {'funny': 12,'cat': 16, 'baby': 2} 
+
 var gMemeToEdit = null
 
 function onInit() {
@@ -26,10 +42,10 @@ function renderMemes() {
             <button class="meme-btn" onclick="onUpdateMeme('${meme.id}')">Update</button>
             <button class="meme-btn" title="Delete meme" class="btn-remove" onclick="onRemoveMeme('${meme.id}')">Delete</button>
             <img title="Photo of ${meme.category}" 
-                src="${meme.url}.jpg" 
+                src="${meme.url}" 
                 alt="Meme category: ${meme.category}"
                 onerror="this.src='${meme.url}'" 
-                onclick="console.log('${meme.url}')">
+                onclick="onClickImg('${meme.id}')">
         </article> 
     `)
     document.querySelector('.memes-container').innerHTML = strHtmls.join('')
@@ -47,8 +63,13 @@ function renderCategories() {
 }
 
 function renderMeme(imageUrl, text) {
+    const editor = document.getElementById('memeEditor')
+    editor.style.display = 'block'
+
     const canvas = document.getElementById('memeCanvas')
     const ctx = canvas.getContext('2d')
+
+    canvas.style.display = 'block'
 
     const image = new Image()
     image.onload = function() {
@@ -60,10 +81,6 @@ function renderMeme(imageUrl, text) {
     }
     image.src = imageUrl
 }
-
-const imageUrl = 'path/to/meme.jpg'
-const text = 'Hello, World!'
-renderMeme(imageUrl, text)
 
 
 // CRUD
@@ -116,9 +133,17 @@ function onSaveMeme() {
 
 // Meme Edit Dialog
 
+function onClickImg(id) {
+    var meme = getMemeById(id)
+
+    renderMeme(meme.url, meme.desc)
+
+
+}
+
 function onSelectCategory(elCategory) {
     const elMemeImg = document.querySelector('.meme-edit-modal img')
-    elMemeImg.src = `img/${elCategory.value}.png`
+    elMemeImg.src = `${elCategory.url}`
 }
 
 function onCloseMemeEdit() {
@@ -134,7 +159,7 @@ function onReadMeme(memeId) {
     elModal.querySelector('h3').innerText = meme.category
     elModal.querySelector('h4 span').innerText = meme.rating
     elModal.querySelector('p').innerText = meme.desc
-    elModal.querySelector('img').src = `${meme.url}.jpg`
+    elModal.querySelector('img').src = `${meme.url}`
 
     elModal.showModal()
 }

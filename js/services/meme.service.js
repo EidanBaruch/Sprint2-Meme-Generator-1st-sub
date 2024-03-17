@@ -57,7 +57,7 @@ function updateMeme(memeId, newCategory, newRating) {
     const meme = gMemes.find(meme => meme.id === memeId)
     console.log(meme)
 
-    meme.rating = rating
+    meme.rating = newRating
     meme.category = newCategory
 
     _saveMemesToStorage()
@@ -112,7 +112,7 @@ function getMemes(options = {}, numImages) {
 
     for (let i = 1; i <= numImages; i++) {
         const filename = `${i}`
-        const url = imgFolder + filename
+        const url = imgFolder + filename + '.jpg'
         const meme = {
             id: makeId(),
             url,

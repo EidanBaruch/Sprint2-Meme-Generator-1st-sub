@@ -3,6 +3,7 @@ body {
 }
 
 .memes-container {
+    color: #000;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
@@ -16,8 +17,7 @@ body {
 
 .meme-btn {
     padding: 3px;
-    padding-left: 1px;
-    padding-right: 1px;
+    margin: 4px;
 }
 
 .actions {
@@ -27,9 +27,21 @@ body {
 
 .hero {
     display: flex;
-	justify-content: space-between;
+	justify-content: center;
     border: 2px #000 solid;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero p {
     
+    font-size: 1.4rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
 }
 
 .meme-preview {
@@ -40,6 +52,19 @@ body {
     border: 2px #000 solid;
     background-color: #eee;
 }
+
 #memeCanvas {
     display: none;
+}
+
+#meme-editor {
+    display: none;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
