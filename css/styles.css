@@ -13,6 +13,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     color: #000;
+    background-color: #fff;
 }
 
 .meme-filter > fieldset {
