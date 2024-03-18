@@ -47,7 +47,7 @@ function getRandomIntInclusive(min, max) {
 function getRandUrl() {
     ++gCurrImg
 
-    const filename = `${i}.jpg`
+    const filename = `${gCurrImg}.jpg`
     const url = 'img/' + filename
 
     return url

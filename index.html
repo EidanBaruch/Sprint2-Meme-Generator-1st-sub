@@ -9,16 +9,19 @@
 	</head>
 
 	<body onload="onInit()">
+        <div class="main-layout">
 		<h1>Ultimate Meme Generator</h1>
         
         <div id="memeEditor">
             <canvas id="memeCanvas" width="450" height="450"></canvas>
+            <button class="close-btn" onclick="toggleEditor(false)">X</button>
         </div>
 
 		<section class="meme-filter">
 			<fieldset>
                 <legend>Filter & Sorting</legend>
-
+                <input oninput="onSetFilterBy({category: this.value})" type="search" placeholder="Search.." class="search">
+            
                 <div class="filter-by">
                     <select class="category-list" onchange="onSetFilterBy({category: this.value})">
                         <option value="">Select Category</option>
@@ -52,6 +55,7 @@
 
 		<section>
             <div class="actions">
+                <button title="Previous Page" onclick="onNextPage()">Previous Page</button>
                 <button title="Add Meme" onclick="onAddMeme()">Add Meme</button>
                 <button title="Next Page" onclick="onNextPage()">Next Page</button>
             </div>
@@ -96,5 +100,6 @@
         <script src="js/services/meme.service.js"></script>
 		<script src="js/controller/meme.controller.js"></script>
         
+        </div>
 	</body>
 </html>

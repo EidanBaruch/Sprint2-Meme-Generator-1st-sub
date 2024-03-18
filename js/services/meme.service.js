@@ -15,17 +15,6 @@ function getMemeCount(filterBy) {
     return _filterMemes(filterBy).length
 }
 
-function _filterMemes(filterBy) {
-    const txt = filterBy.txt.toLowerCase()
-    const rating = filterBy.rating
-
-    const memes = gMemes.filter(meme => 
-        meme.category.includes(txt) &&
-        meme.rating >= rating)
-
-    return memes
-}
-
 function getCategories() {
     return gCategories
 }
@@ -94,21 +83,34 @@ function _saveMemesToStorage() {
     saveToStorage(STORAGE_KEY, gMemes)
 }
 
-function getMemes(options = {}, numImages) {
-    var memes = _filterMemes(options.filterBy)
+function _filterMemes(filterBy) {
+    const txt = filterBy.txt.toLowerCase()
+    const rating = filterBy.rating
 
-    if(options.sortBy.rating) {
-        memes.sort((meme1, meme2) => (meme1.rating - meme2.rating) * options.sortBy.rating)
-    } else if(options.sortBy.category) {
-        memes.sort((meme1, meme2) => meme1.category.localeCompare(meme2.category) * options.sortBy.category)
+    const filteredMemes = gMemes.filter(meme => 
+        (meme.category.includes(txt) || meme.desc.toLowerCase().includes(txt)) &&
+        meme.rating >= rating)
+
+    return filteredMemes
+}
+
+function getFilteredMemes(options = {}, numImages) {
+    var filteredMemes = _filterMemes(options.filterBy)
+
+    if (options.sortBy.category) {
+        filteredMemes.sort((meme1, meme2) => meme1.category.localeCompare(meme2.category) * options.sortBy.category)
+    }
+    else if (options.sortBy.rating) {
+        filteredMemes.sort((meme1, meme2) => (meme1.rating - meme2.rating) * options.sortBy.rating)
     }
 
     if(options.page) {
         const startIdx = options.page.idx * options.page.size
-        memes = memes.slice(startIdx, startIdx + options.page.size)
+        filteredMemes = filteredMemes.slice(startIdx, startIdx + options.page.size)
     }
 
     const imgFolder = 'img/'
+    const newMemes = []
 
     for (let i = 1; i <= numImages; i++) {
         const filename = `${i}`
@@ -121,11 +123,22 @@ function getMemes(options = {}, numImages) {
             desc: makeLorem()
         }
         
-        memes.push(meme)
+        newMemes.push(meme)
     }
 
-    gMemes = memes
+    return filteredMemes.concat(newMemes)
+}
 
-    return memes
-    
+function hideMemesContainer() {
+    const memesContainer = document.querySelector('.memes-container')
+    if (memesContainer) {
+        memesContainer.style.display = 'none'
+    }
+}
+
+function showMemesContainer() {
+    const memesContainer = document.querySelector('.memes-container')
+    if (memesContainer) {
+        memesContainer.style.display = 'grid'
+    }
 }
